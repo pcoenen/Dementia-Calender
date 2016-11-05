@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
+
+    <title>Copyright 2016 Coenen Pieter-Jan</title>
+
+    <link href="css/metro.css" rel="stylesheet">
+    <link href="css/metro-icons.css" rel="stylesheet">
+    <link href="css/metro-responsive.css" rel="stylesheet">
+
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <script src="js/metro.js"></script>
+
+</head>
+<body>
+    <div class="flex-grid bg-bgcolor">
+    	<div class="row">
+        	<div class="cell size3" style="overflow-y: auto; height:100%;" >
+        		<div class="accordion large-heading bg-bgcolor" data-role="accordion">
+                    <div class="frame">
+                        <div class="headingTitle">Agenda</div>
+                    </div>
+                    <div class="frame" onclick="changeYesterday();" id="frameYesterday">
+                        <div class="heading">Gisteren</div>
+                        <div class="content bg-bgcolor" id="yesterday" style="overflow-y: auto;">
+                        </div>
+                    </div>
+                    <div class="frame active" onclick="changeToday();" id="frameToday">
+                        <div class="heading">Vandaag</div>
+                        <div class="content bg-bgcolor" id="today" style="overflow-y: auto; overflow-x:hidden;">
+                        </div>
+                    </div>
+                </div>
+        	</div>
+           	<div class="cell size6" id="main"></div>
+            <div class="cell size3">
+            	<div class="tile-group no-margin no-padding">
+		         	<div class="tile-wide bg-orange fg-white" onclick="prepaireMain('Bezoek gekregen van:', 'Bezoek van');" data-role="tile">
+		             	<div class="tile-content" style="padding:35px; text-align: center;">
+		                     <h1>Bezoek</h1>
+		                 </div>
+		             </div>
+		             <div class="tile-wide bg-teal fg-white" data-role="tile">
+		             	<div class="tile-content" style="padding:35px; text-align: center;">
+		                     <h1>Medicatie</h1>
+		                 </div>
+		             </div>
+		             <div class="tile-wide bg-lime fg-white" data-role="tile" onclick="prepaireMain('Gewinkeld in:', 'Winkelen in ');">
+		             	<div class="tile-content" style="padding:35px; text-align: center;">
+		                     <h1>Winkel</h1>
+		                 </div>
+		             </div>
+		             <div class="tile-wide bg-lightBlue fg-white" onclick="prepaireMain('Uitstap naar:','Uitstap');" data-role="tile">
+		             	<div class="tile-content" style="padding: 35px; text-align: center;">
+		                     <h1>Uitstap</h1>
+		                 </div>
+		             </div>
+         		</div>
+            </div>
+        </div>
+    </div>
+    <script>
+    // On start
+    showHome();
+	var home;	
+    function showHome(){
+    	var today = new Date();
+	    var h = today.getHours();
+	    var m = today.getMinutes();
+	    var s = today.getSeconds();
+	    var day = today.getDate();
+	    var year = today.getFullYear();
+	    m = addZeros(m);
+	    s = addZeros(s);
+	    var time = h + ":" + m;
+	    var date = day + " " + " november " + year;
+    	document.getElementById("main").innerHTML = '<div align="center"><h1 style="padding:20px;">Donderdag</h1><h1 style="padding:20px;">' + date + '</h1><p style="padding:50px; font-size: 500%;">' + time + '</p></div>';
+    	home = setTimeout(showHome, (60-s)*1000);
+    }
+    var prefix;
+    function prepaireMain(text, pref){
+    	clearTimeout(home);
+    	prefix = pref;
+    	document.getElementById("main").innerHTML = '<form style="padding:50px;" action="javascript:void(0);"><h1>' + text + '</h1><input style="top:50px;" type="text" class="input-control text bg-bgcolor" name="value" id="value"/><p>&nbsp;</p><p>&nbsp;</p><div style="text-align: center;"><button class="button success" onclick="saveActivity();">Toevoegen</button></div></form>';
+    }
+	function addZeros(i) {
+	    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+	    return i;
+	}
+    </script>
+	<script>
+	function saveActivity(){
+		data = prefix + " "+ document.getElementById("value").value;
+		addData(data);
+	}
+	function addData(data){
+		var today = new Date();
+	    var h = today.getHours();
+	    var m = today.getMinutes();
+	    m = addZeros(m);
+	    var year = today.getFullYear();
+	    var month = today.getMonth();
+	    var day = addZeros(today.getDate());
+	    updateDateList("" + year + month + day);
+		localStorage.setItem("" + year + month + day, localStorage.getItem("" + year + month + day) + "#@#" + h + ":" + m + "#&#" + data);
+		loadToday();
+		showHome();
+	}
+	function updateDateList(date){
+		var dateList = localStorage.getItem("dateList");
+		if(dateList !== null){
+			dateList = dateList.split("#@#");
+			var length = dateList.length;
+			if(dateList[length-1] != date){
+				if(length > 31){
+					var oldDate = dateList.shift();
+					localStorage.removeItem(oldDate);
+				}
+				dateList.push(date);
+				var newList = dateList.join("#@#");
+				localStorage.setItem("dateList", newList);
+			}
+		} else {
+			localStorage.setItem("dateList", date);
+		}
+	}
+	loadToday();
+	function loadToday(){
+		var today = new Date();
+	    var year = today.getFullYear();
+	    var month = today.getMonth();
+	    var day = addZeros(today.getDate());
+		var data = localStorage.getItem("" + year + month + day);
+		var array = data.split("#@#");
+		array.shift();
+		var today = "<hr>";
+		for (var i = 0; i < array.length; i++) {
+			var data = array[i].split("#&#");
+			today += "<p><b>" + data[0] + "</b><br/>" + data[1] + "</p><hr>";
+		}
+		document.getElementById("today").innerHTML = today;
+	}
+	loadYesterday();
+	function loadYesterday(){
+		var dateList = localStorage.getItem("dateList").split("#@#");
+		var yesterday = dateList[dateList.length - 2];
+		document.getElementById("yesterday").innerHTML = getLeftData(yesterday);
+	}
+	function getLeftData(day){
+		var data = localStorage.getItem(day);
+		var array = data.split("#@#");
+		var day = "<hr>";
+		for (var i = 1; i < array.length; i++) {
+			var data = array[i].split("#&#");
+			day += "<p><b>" + data[0] + "</b><br/>" + data[1] + "</p><hr>";
+		}
+		return day;
+	}
+	</script>
+	<script>
+	// Scripts for frames
+	var yesterday = false;
+	var today = true;
+	function changeYesterday(){
+		if(yesterday){
+			document.getElementById("frameToday").className = "frame active";
+			today = false;
+			yesterday = false;
+		} else {
+			document.getElementById("frameToday").className = "frame";
+			today = false;
+			yesterday = true;
+		}
+	}
+	function changeToday(){
+		if(today){
+			today = false;
+		} else {
+			document.getElementById("frameYesterday").className = "frame";
+			yesterday = false;
+			today = true;
+		}
+	}
+	</script>
+</body>
+</html>

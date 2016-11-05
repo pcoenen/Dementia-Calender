@@ -3814,7 +3814,7 @@ a.tag {
 }
 .button {
   padding: 0 1rem;
-  height: 2.125rem;
+  height: 80px;
   text-align: center;
   vertical-align: middle;
   background-color: #ffffff;
@@ -3823,7 +3823,7 @@ a.tag {
   cursor: pointer;
   display: inline-block;
   outline: none;
-  font-size: .875rem;
+  font: 400 2.25rem/1.1 "Segoe UI", "Open Sans", sans-serif, serif;
   line-height: 100%;
   margin: .15625rem 0;
   position: relative;
@@ -5949,7 +5949,9 @@ div.square-button.big-button {
 .input-control.number,
 .input-control.email,
 .input-control.tel {
-  width: 10.875rem;
+  width: 100%;
+  height: 100px;
+  font: 400 2.25rem/1.1 "Segoe UI", "Open Sans", sans-serif, serif;
 }
 .input-control.text .button,
 .input-control.select .button,
@@ -10192,7 +10194,8 @@ input[type="submit"].link:active {
 .accordion > .frame > .heading {
   display: block;
   padding: 8px 16px 8px 20px;
-  background-color: #f6f6f6;
+  background-color: #00aba9;
+  color: #ffffff;
   cursor: pointer;
   font-size: .6875rem;
   text-transform: uppercase;
@@ -10222,6 +10225,7 @@ input[type="submit"].link:active {
           transform: rotate(-45deg);
   transition: all 0.3s ease;
 }
+
 .accordion > .frame > .heading:hover {
   background-color: #eeeeee;
 }
@@ -10280,11 +10284,40 @@ input[type="submit"].link:active {
   top: 10px;
   border-left: 12px solid transparent;
   border-top: 12px solid transparent;
-  border-bottom: 12px solid black;
+  border-bottom: 12px solid white;
 }
 .accordion.large-heading > .frame.active > .heading:before {
   border-bottom-color: #ffffff;
 }
+
+.accordion > .frame > .headingTitle {
+  display: block;
+  padding: 8px 16px 8px 20px;
+  background-color: #e51400;
+  cursor: pointer;
+  font-size: .6875rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  position: relative;
+  border: 1px #eeeeee solid;
+  overflow: hidden;
+  z-index: 2;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  transition: all 0.3s ease;
+  color: #ffffff;
+}
+.accordion.large-heading > .frame > .headingTitle {
+  font-size: 2rem;
+  line-height: 1.1;
+  font-weight: 300;
+  padding-left: 32px;
+  text-shadow: none;
+  padding-bottom: 10px;
+}
+
 .carousel {
   display: block;
   width: 100%;
@@ -11170,22 +11203,23 @@ input[type="submit"].link:active {
   z-index: 999;
 }
 .tile-wide {
-  width: 150px;
-  display: block;
-  float: left;
-  margin: 5px;
-  background-color: #eeeeee;
-  box-shadow: inset 0 0 1px #FFFFCC;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  overflow: visible;
-  width: 310px;
-  height: 150px;
+    width: 150px;
+    display: block;
+    float: right;
+    right: 10px;
+    margin: 5px;
+    background-color: #eeeeee;
+    box-shadow: inset 0 0 1px #FFFFCC;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    overflow: visible;
+    width: 310px;
+    height: 150px;
 }
 .tile-wide:hover {
   outline: #999999 solid 3px;
@@ -15491,6 +15525,9 @@ video::-webkit-media-controls-enclosure {
 }
 .bg-black {
   background-color: #000000 !important;
+}
+.bg-bgcolor{
+	background-color: #F0F8FF !important;
 }
 .fg-white {
   color: #ffffff !important;

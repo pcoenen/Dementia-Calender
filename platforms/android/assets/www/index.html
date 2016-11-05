@@ -19,7 +19,7 @@
 <body>
     <div class="flex-grid bg-bgcolor">
     	<div class="row">
-        	<div class="cell size3">
+        	<div class="cell size3" style="overflow-y: auto; height:100%;" >
         		<div class="accordion large-heading bg-bgcolor" data-role="accordion">
                     <div class="frame">
                         <div class="headingTitle">Agenda</div>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="frame active" onclick="changeToday();" id="frameToday">
                         <div class="heading">Vandaag</div>
-                        <div class="content bg-bgcolor" id="today" style="overflow-y: auto; overflow-x:hidden; height:100%;">
+                        <div class="content bg-bgcolor" id="today" style="overflow-y: auto; overflow-x:hidden;">
                         </div>
                     </div>
                 </div>

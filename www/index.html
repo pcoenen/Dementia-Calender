@@ -91,6 +91,7 @@
 	    var date = date + " " + maanden[month] + " " + year;
     	document.getElementById("main").innerHTML = '<div align="center"><h1 style="padding:20px;">' + dagen[day] + '</h1><h1 style="padding:20px;">' + date + '</h1><p style="padding:50px; font-size: 500%;">' + time + '</p></div>';
     	home = setTimeout(showHome, (60-s)*1000);
+    	loadFrames();
     }
     var prefix;
     function prepaireMain(text, pref){
@@ -127,7 +128,7 @@
 	    var day = addZeros(today.getDate());
 	    updateDateList("" + year + month + day);
 		localStorage.setItem("" + year + month + day, localStorage.getItem("" + year + month + day) + "#@#" + h + ":" + m + "#&#" + data);
-		loadToday();
+		loadFrames();
 		showHome();
 	}
 	function updateDateList(date){
@@ -206,7 +207,7 @@
 			}
 			return values;
 		} else {
-			return "";
+			return "<p><b>Geen gegevens op dit moment</b></p>";
 		}
 	}
 	</script>
@@ -220,8 +221,8 @@
 	</script>
 	<script>
 	function main(){
-		loadFrames();
-		setMaxHeights()
+		setMaxHeights();		
+		loadFrames();		
 		showHome();
 	}
 	main();

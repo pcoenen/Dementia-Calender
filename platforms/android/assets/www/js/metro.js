@@ -1625,6 +1625,11 @@ $.widget("metro.accordion", {
     },
 
     _openFrame: function(frame){
+    	var that = this;
+        var frames = this.element.children('.frame.active');
+        $.each(frames, function(){
+            that._closeFrame($(this));
+        });
         var o = this.options;
         var content = frame.children('.content');
         var result;

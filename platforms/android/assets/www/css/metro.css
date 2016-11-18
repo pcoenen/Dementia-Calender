@@ -2,7 +2,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  height: 100%;
+  height: 100% !important;
 }
 html,
 body,
@@ -10229,6 +10229,16 @@ input[type="submit"].link:active {
 .accordion > .frame > .heading:hover {
   background-color: #eeeeee;
 }
+.accordion > .frame > .headingTitle .icon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 3rem;
+  width: 3rem;
+  max-height: 3rem;
+  opacity: .6;
+  color: #ffffff;
+}
 .accordion > .frame > .heading .icon {
   position: absolute;
   right: 0;
@@ -10293,7 +10303,7 @@ input[type="submit"].link:active {
 .accordion > .frame > .headingTitle {
   display: block;
   padding: 8px 16px 8px 20px;
-  background-color: #e51400;
+  background-color: #ffc40d;
   cursor: pointer;
   font-size: .6875rem;
   text-transform: uppercase;
@@ -10828,7 +10838,7 @@ input[type="submit"].link:active {
   line-height: 1.1;
 }
 .tile-group {
-  margin-left: 80px;
+  margin-left: 30%;
   min-width: 80px;
   width: auto;
   float: left;

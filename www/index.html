@@ -115,8 +115,11 @@
 		loadAgenda();
 	}
 	function saveActivity(){
-		data = prefix + " "+ document.getElementById("value").value;
-		addData(data);
+		var value = document.getElementById("value").value;
+		if(value != ""){
+			var data = prefix + " "+ value;
+			addData(data);
+		}
 	}
 	function addData(data){
 		var today = new Date();

@@ -16,22 +16,25 @@
     <script src="js/metro.js"></script>
 
 </head>
-<body>
+<body class="bg-bgcolor">
     <div class="flex-grid bg-bgcolor">
     	<div class="row">
-        	<div class="cell size3" style="overflow-y: auto; height:100%;" >
+        	<div class="cell size3" style="overflow-y: hidden;" id="menu" >
         		<div class="accordion large-heading bg-bgcolor" data-role="accordion">
+        			<div class="frame">
+                        <div class="headingTitle" onclick="showHome();">Home<span class="mif-home icon"></span></div>
+                    </div>
                     <div class="frame">
-                        <div class="headingTitle">Agenda</div>
+                        <div class="heading" style="background-color: #e51400;">Agenda</div>
+                        <div class="content bg-bgcolor" id="agenda" style="height: auto; overflow-y: auto; overflow-x: hidden;"></div>
                     </div>
-                    <div class="frame" onclick="changeYesterday();" id="frameYesterday">
-                        <div class="heading">Gisteren</div>
-                        <div class="content bg-bgcolor" id="yesterday" style="overflow-y: auto;">
-                        </div>
+                    <div class="frame" id="frameYesterday">
+                        <div class="heading" style="background-color:#00aba9;">Gisteren</div>
+                        <div class="content bg-bgcolor" id="yesterday" style="height: auto; overflow-y: auto; overflow-x: hidden;"></div>
                     </div>
-                    <div class="frame active" onclick="changeToday();" id="frameToday">
-                        <div class="heading">Vandaag</div>
-                        <div class="content bg-bgcolor" id="today" style="overflow-y: auto; overflow-x:hidden;">
+                    <div class="frame active" id="frameToday">
+                        <div class="heading" style="background-color:#1ba1e2;">Vandaag</div>
+                        <div class="content bg-bgcolor" id="today" style="height: auto; overflow-y: auto; overflow-x: hidden;">
                         </div>
                     </div>
                 </div>
@@ -44,7 +47,7 @@
 		                     <h1>Bezoek</h1>
 		                 </div>
 		             </div>
-		             <div class="tile-wide bg-teal fg-white" data-role="tile">
+		             <div class="tile-wide bg-teal fg-white" onclick="medication();" data-role="tile">
 		             	<div class="tile-content" style="padding:35px; text-align: center;">
 		                     <h1>Medicatie</h1>
 		                 </div>
@@ -65,34 +68,52 @@
     </div>
     <script>
     // On start
-    showHome();
-	var home;	
+	var home;
+	function setMain(content){
+		clearTimeout(home);
+		document.getElementById("main").innerHTML = content;
+	}
     function showHome(){
+    	var maanden = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"];
+    	var dagen = ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"];
     	var today = new Date();
 	    var h = today.getHours();
 	    var m = today.getMinutes();
 	    var s = today.getSeconds();
-	    var day = today.getDate();
+	    var day = today.getDay();
+	    var date = today.getDate();
+	    var month = today.getMonth();
 	    var year = today.getFullYear();
+	    h = addZeros(h);
 	    m = addZeros(m);
 	    s = addZeros(s);
 	    var time = h + ":" + m;
-	    var date = day + " " + " november " + year;
-    	document.getElementById("main").innerHTML = '<div align="center"><h1 style="padding:20px;">Donderdag</h1><h1 style="padding:20px;">' + date + '</h1><p style="padding:50px; font-size: 500%;">' + time + '</p></div>';
+	    var date = date + " " + maanden[month] + " " + year;
+    	document.getElementById("main").innerHTML = '<div align="center"><h1 style="padding:20px;">' + dagen[day] + '</h1><h1 style="padding:20px;">' + date + '</h1><p style="padding:50px; font-size: 500%;">' + time + '</p></div>';
     	home = setTimeout(showHome, (60-s)*1000);
+    	loadFrames();
     }
     var prefix;
     function prepaireMain(text, pref){
     	clearTimeout(home);
     	prefix = pref;
-    	document.getElementById("main").innerHTML = '<form style="padding:50px;" action="javascript:void(0);"><h1>' + text + '</h1><input style="top:50px;" type="text" class="input-control text bg-bgcolor" name="value" id="value"/><p>&nbsp;</p><p>&nbsp;</p><div style="text-align: center;"><button class="button success" onclick="saveActivity();">Toevoegen</button></div></form>';
+    	document.getElementById("main").innerHTML = '<form style="padding:50px;" action="javascript:void(0);"><h2>' + text + '</h2><input style="top:50px;" type="text" class="input-control text bg-bgcolor" name="value" id="value"/><p>&nbsp;</p><p>&nbsp;</p><div style="text-align: center;"><button class="button success" onclick="saveActivity();">Toevoegen</button></div></form>';
     }
 	function addZeros(i) {
 	    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
 	    return i;
 	}
+	function medication(){
+		var value = '<h2 style="padding:50px;" align="center">Welke medicatie heeft u genomen?</h2><div class="tile-group" align="center"><div class="tile-wide bg-orange fg-white" onclick="addData(\'Medicatie genomen\');" data-role="tile"><div class="tile-content" style="padding:35px; text-align: center;"><h1>Medicatie</h1></div></div></div><br/><div class="tile-group"><div class="tile-wide bg-teal fg-white" onclick="addData(\'Extra medicatie genomen\');" data-role="tile"><div class="tile-content" style="padding:15px; text-align: center;"><h1>Extra Medicatie</h1></div></div></div>';
+		setMain(value);
+	}
     </script>
 	<script>
+	function loadFrames(){
+		loadToday();
+		loadYesterday();
+		loadAgenda();
+	}
 	function saveActivity(){
 		data = prefix + " "+ document.getElementById("value").value;
 		addData(data);
@@ -107,7 +128,7 @@
 	    var day = addZeros(today.getDate());
 	    updateDateList("" + year + month + day);
 		localStorage.setItem("" + year + month + day, localStorage.getItem("" + year + month + day) + "#@#" + h + ":" + m + "#&#" + data);
-		loadToday();
+		loadFrames();
 		showHome();
 	}
 	function updateDateList(date){
@@ -128,63 +149,83 @@
 			localStorage.setItem("dateList", date);
 		}
 	}
-	loadToday();
 	function loadToday(){
 		var today = new Date();
 	    var year = today.getFullYear();
 	    var month = today.getMonth();
 	    var day = addZeros(today.getDate());
-		var data = localStorage.getItem("" + year + month + day);
-		var array = data.split("#@#");
-		array.shift();
-		var today = "<hr>";
-		for (var i = 0; i < array.length; i++) {
-			var data = array[i].split("#&#");
-			today += "<p><b>" + data[0] + "</b><br/>" + data[1] + "</p><hr>";
-		}
-		document.getElementById("today").innerHTML = today;
+	    document.getElementById("today").innerHTML = getDayOverview(day, month, year)
 	}
-	loadYesterday();
 	function loadYesterday(){
-		var dateList = localStorage.getItem("dateList").split("#@#");
-		var yesterday = dateList[dateList.length - 2];
-		document.getElementById("yesterday").innerHTML = getLeftData(yesterday);
+		var yesterday = new Date();
+		yesterday.setDate(yesterday.getDate() - 1);
+	    var year = yesterday.getFullYear();
+	    var month = yesterday.getMonth();
+	    var day = addZeros(yesterday.getDate());
+	    document.getElementById("yesterday").innerHTML = getDayOverview(day, month, year);
 	}
-	function getLeftData(day){
-		var data = localStorage.getItem(day);
-		var array = data.split("#@#");
-		var day = "<hr>";
-		for (var i = 1; i < array.length; i++) {
-			var data = array[i].split("#&#");
-			day += "<p><b>" + data[0] + "</b><br/>" + data[1] + "</p><hr>";
+	
+	function loadAgenda(){
+		var h = screen.availHeight - 175;
+		var dateList = localStorage.getItem("dateList");
+		if(dateList !== null){
+			var values = "<hr>";
+			dateList = dateList.split("#@#");
+			array = dateList.reverse();
+			for (var i = 0; i < array.length; i++) {
+				var year = array[i].substr(0, 4);
+				var month = array[i].substr(4, 2);
+				var day = array[i].substr(6, 2);
+				var dayText = getDate(day, month, year);
+				values += "<p onclick=\"setMain('<h2 style=&quot; margin: 20px 0px 0px 75px;  &quot;>" + dayText + "</h2><div style=&quot; overflow-y: auto; margin: 30px 75px 20px 75px; max-height: " + h + "px; height:auto; &quot;>' + getDayOverview('" + day + "', '" + month + "', '" + year + "') + '</div>');\"><b>" + dayText + "</b></p><hr>";
+			}
+			document.getElementById("agenda").innerHTML = values;
 		}
-		return day;
+	}
+	
+	function getDate(day, month, year){
+		var maanden = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"];
+    	var dagen = ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"];
+		var d = new Date();
+		d.setDate(day);
+		d.setMonth(month);
+		d.setYear(year);
+		dag = d.getDay();
+		return dagen[dag] + " " + day + " " + maanden[month] + " " + year;
+	}
+	
+	function getDayOverview(day, month, year){
+		var data = localStorage.getItem("" + year + month + day);
+		if(data != null){
+			var array = data.split("#@#");
+			array.shift();
+			array.reverse();
+			var values = "<hr>";
+			for (var i = 0; i < array.length; i++) {
+				var data = array[i].split("#&#");
+				values += "<p><b>" + data[0] + "</b><br/>" + data[1] + "</p><hr>";
+			}
+			return values;
+		} else {
+			return "<p><b>Geen gegevens op dit moment</b></p>";
+		}
 	}
 	</script>
 	<script>
-	// Scripts for frames
-	var yesterday = false;
-	var today = true;
-	function changeYesterday(){
-		if(yesterday){
-			document.getElementById("frameToday").className = "frame active";
-			today = false;
-			yesterday = false;
-		} else {
-			document.getElementById("frameToday").className = "frame";
-			today = false;
-			yesterday = true;
-		}
+	function setMaxHeights(){
+		var h = screen.availHeight - 61 * 4;
+		document.getElementById("yesterday").style.maxHeight = h + "px" ;
+		document.getElementById("today").style.maxHeight = h + "px" ;
+		document.getElementById("agenda").style.maxHeight = h + "px" ;
 	}
-	function changeToday(){
-		if(today){
-			today = false;
-		} else {
-			document.getElementById("frameYesterday").className = "frame";
-			yesterday = false;
-			today = true;
-		}
+	</script>
+	<script>
+	function main(){
+		setMaxHeights();		
+		loadFrames();		
+		showHome();
 	}
+	main();
 	</script>
 </body>
 </html>

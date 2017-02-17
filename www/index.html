@@ -82,13 +82,13 @@
 	    var s = today.getSeconds();
 	    var day = today.getDay();
 	    var date = today.getDate();
-	    var month = today.getMonth();
+	    var month = addZeros(today.getMonth());
 	    var year = today.getFullYear();
 	    h = addZeros(h);
 	    m = addZeros(m);
 	    s = addZeros(s);
 	    var time = h + ":" + m;
-	    var date = date + " " + maanden[month] + " " + year;
+	    var date = date + " " + maanden[parseInt(month)] + " " + year;
     	document.getElementById("main").innerHTML = '<div align="center"><h1 style="padding:20px;">' + dagen[day] + '</h1><h1 style="padding:20px;">' + date + '</h1><p style="padding:50px; font-size: 500%;">' + time + '</p></div>';
     	home = setTimeout(showHome, (60-s)*1000);
     	loadFrames();
@@ -127,7 +127,7 @@
 	    var m = today.getMinutes();
 	    m = addZeros(m);
 	    var year = today.getFullYear();
-	    var month = today.getMonth();
+	    var month = addZeros(today.getMonth());
 	    var day = addZeros(today.getDate());
 	    updateDateList("" + year + month + day);
 		localStorage.setItem("" + year + month + day, localStorage.getItem("" + year + month + day) + "#@#" + h + ":" + m + "#&#" + data);
@@ -155,7 +155,7 @@
 	function loadToday(){
 		var today = new Date();
 	    var year = today.getFullYear();
-	    var month = today.getMonth();
+	    var month = addZeros(today.getMonth());
 	    var day = addZeros(today.getDate());
 	    document.getElementById("today").innerHTML = getDayOverview(day, month, year)
 	}
@@ -163,7 +163,7 @@
 		var yesterday = new Date();
 		yesterday.setDate(yesterday.getDate() - 1);
 	    var year = yesterday.getFullYear();
-	    var month = yesterday.getMonth();
+	    var month = addZeros(yesterday.getMonth());
 	    var day = addZeros(yesterday.getDate());
 	    document.getElementById("yesterday").innerHTML = getDayOverview(day, month, year);
 	}
@@ -194,7 +194,7 @@
 		d.setMonth(month);
 		d.setYear(year);
 		dag = d.getDay();
-		return dagen[dag] + " " + day + " " + maanden[month] + " " + year;
+		return dagen[dag] + " " + day + " " + maanden[parseInt(month)] + " " + year;
 	}
 	
 	function getDayOverview(day, month, year){
